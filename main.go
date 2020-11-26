@@ -13,7 +13,7 @@ import (
 func configInit() {
 	// Get config from json
 	// Get config from json
-	viper.SetConfigName("config/config")
+	viper.SetConfigName("config/config.test")
 
 	viper.AddConfigPath(".")
 	viper.SetConfigType("json")
