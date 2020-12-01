@@ -24,12 +24,12 @@ func connActiveMq() (stompConn *stomp.Conn) { // @todo 实现断开重连
 		broker,
 		stomp.ConnOpt.Login(name, password),
 		stomp.ConnOpt.HeartBeat(3*time.Minute, 3*time.Minute),
-		stomp.ConnOpt.HeartBeatError(3*time.Second))
+		stomp.ConnOpt.HeartBeatError(3*time.Second),
+	)
 	if err != nil {
 		fmt.Println("connect to active_mq server service, error: " + err.Error())
 		os.Exit(1)
 	}
-
 	return stompConn
 }
 

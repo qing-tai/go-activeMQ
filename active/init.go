@@ -19,21 +19,25 @@ func Init() {
 func getMsgFunc() {
 	// connActiveMq()
 	stompConn := connActiveMq()
+	defer stompConn.Disconnect()
+
 	fmt.Println(stompConn.Version().String())
 	fmt.Println(stompConn.Server())
 
 	topic := "/topic/" + viper.GetString("active.topic")
 	fmt.Println(topic)
+
 	stompSub, err := stompConn.Subscribe(topic,
-		stomp.AckMode(stomp.AckAuto),
-		stomp.SubscribeOpt.Id("Skyhawk1126"))
+		stomp.AckAuto,
+		// stomp.SubscribeOpt.Header("persistent", "true"),
+		// stomp.SubscribeOpt.Id("Skyhawk1129")
+	)
 	if err != nil {
 		fmt.Println("stomp subscribe err:" + err.Error())
 	}
+	defer stompSub.Unsubscribe()
 
 	fmt.Println("start for get msg")
-
-	// stompConn.Session()
 
 	for {
 		select {
@@ -46,17 +50,9 @@ func getMsgFunc() {
 
 			//如果30秒还没有人发数据的话，就结束
 		case <-time.After(time.Second * 30):
-			// fmt.Println("timeout")
+			fmt.Println("timeout")
 
 		}
-
-		// time.Sleep(time.Second)
-		// msg, err := stompSub.Read()
-		// if err != nil {
-		// 	fmt.Println("read stompSub error: " + err.Error())
-		// 	continue
-		// }
-		// fmt.Println(msg)
 
 	}
 
